@@ -2,10 +2,13 @@ package org.neurogine.librarymanagementbackend.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.neurogine.librarymanagementbackend.entity.User;
+import org.neurogine.librarymanagementbackend.security.JwtUtility;
 import org.neurogine.librarymanagementbackend.service.UserService;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/users")
@@ -35,14 +38,37 @@ public class UserController {
 
     // Login user (temporary - Jwt later)
     @PostMapping("/login")
-    public boolean login(@RequestBody User user){
-        return userService.login(user);
+    public Map<String, String> login(@RequestBody User user) {
+
+        boolean success = userService.login(user);
+
+        if (!success) {
+            throw new RuntimeException("Invalid username or password");
+        }
+
+        String token = JwtUtility.generateToken(user.getUserName());
+
+        Map<String, String> response = new HashMap<>();
+        response.put("token", token);
+
+        return response;
     }
+
+
+
+
 
     // Get All users
     @GetMapping
     public List<User> list(){
         return userService.findAll();
+    }
+
+    // Add User
+
+    @PostMapping
+    public User addUser(@RequestBody User user) {
+        return userService.addUser(user);
     }
 
     // get By id

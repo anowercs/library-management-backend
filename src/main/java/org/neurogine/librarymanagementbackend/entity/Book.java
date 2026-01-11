@@ -29,4 +29,8 @@ public class Book {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private BookCategory category;
+
+    // ---------- NOT A DB COLUMN ----------
+    @Transient
+    private Integer categoryId;
 }
