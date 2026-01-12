@@ -34,8 +34,6 @@ public class BookController {
         return bookService.findAll();
     }
 
-
-
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public Book add(
             @RequestParam String bookName,

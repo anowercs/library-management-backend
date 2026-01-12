@@ -1,5 +1,6 @@
 package org.neurogine.librarymanagementbackend.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -11,6 +12,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class BookCategory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

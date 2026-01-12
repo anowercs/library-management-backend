@@ -48,9 +48,11 @@ public class BookService {
         bookRepository.deleteById(id);
     }
 
-    public List<Book> findAll(){
-        return bookRepository.findAll();
+
+    public List<Book> findAll() {
+        return bookRepository.findAllWithCategory();
     }
+
 
     public List<Book> findByKeyword(String keyword){
         return bookRepository.findByBookNameContainingOrRemarkContainingOrDescriptionContaining(
