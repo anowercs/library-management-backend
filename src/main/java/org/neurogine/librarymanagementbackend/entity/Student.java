@@ -25,4 +25,12 @@ public class Student {
     private Integer age;
 
     private String gender;
+
+    @PrePersist
+    @PreUpdate
+    private void normalizeNo() {
+        if (no != null) {
+            no = no.toUpperCase(); // or toUpperCase()
+        }
+    }
 }

@@ -19,9 +19,25 @@ public class StudentService {
         return studentRepository.save(student);
     }
 
-    public Student update(Student student){
-        return studentRepository.save(student);
+    public Student update(Student student) {
+
+        Student existing = studentRepository.findById(student.getId())
+                .orElseThrow(() -> new RuntimeException("Student not found"));
+
+        existing.setNo(student.getNo().toUpperCase());
+        existing.setName(student.getName());
+        existing.setAge(student.getAge());
+        existing.setGender(student.getGender());
+
+        return studentRepository.save(existing);
     }
+
+
+    public Student getById(Integer id) {
+        return studentRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Student not found"));
+    }
+
 
     public void delete(Integer id){
         studentRepository.deleteById(id);

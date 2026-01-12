@@ -12,15 +12,10 @@ import java.util.Optional;
 
 @Service
 @Transactional
-// If a method fails halfway through (e.g., in changePassword),
-// the database will "roll back" to its previous state, preventing corrupted data.
 @RequiredArgsConstructor
 public class UserService {
 
     private final UserRepository userRepository;
-    /*public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }*/
 
 
      //register / add user
@@ -58,12 +53,22 @@ public class UserService {
     }
 
     //Change Password
-    public boolean changePassword(Integer userId, String newPassword){
-        Optional<User> optionalUser = userRepository.findById(userId);
-        if (optionalUser.isEmpty()) {
+    public boolean changePassword(
+            String username,
+            String currentPassword,
+            String newPassword
+    ) {
+        Optional<User> optionalUser =
+                userRepository.findByUserName(username);
+
+        if (optionalUser.isEmpty()) return false;
+
+        User user = optionalUser.get();
+
+        if (!user.getPassword().equals(currentPassword)) {
             return false;
         }
-        User user = optionalUser.get();
+
         user.setPassword(newPassword);
         userRepository.save(user);
         return true;

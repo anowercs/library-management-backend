@@ -12,7 +12,7 @@ import java.util.List;
 @Transactional
 @RequiredArgsConstructor
 public class BookCategoryService {
-    private BookCategoryRepository bookCategoryRepository;
+    private final BookCategoryRepository bookCategoryRepository;
 
     public BookCategory add(BookCategory bookCategory) {
         return bookCategoryRepository.save(bookCategory);

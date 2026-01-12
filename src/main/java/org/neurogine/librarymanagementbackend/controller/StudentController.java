@@ -33,6 +33,11 @@ public class StudentController {
         student.setId(id);
         return studentService.update(student);
     }
+    @GetMapping("/{id}")
+    public Student getById(@PathVariable Integer id) {
+        return studentService.getById(id);
+    }
+
 
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Integer id){

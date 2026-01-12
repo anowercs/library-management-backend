@@ -4,6 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.neurogine.librarymanagementbackend.entity.User;
 import org.neurogine.librarymanagementbackend.security.JwtUtility;
 import org.neurogine.librarymanagementbackend.service.UserService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -16,10 +19,6 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
-    /*public UserController(UserService userService) {
-        this.userService = userService;
-    }*/
-
 
     // Register user
     @PostMapping("/register")
@@ -56,19 +55,28 @@ public class UserController {
 
 
 
-
-
     // Get All users
     @GetMapping
     public List<User> list(){
         return userService.findAll();
     }
 
-    // Add User
-
+     // Add User
     @PostMapping
-    public User addUser(@RequestBody User user) {
-        return userService.addUser(user);
+    public ResponseEntity<?> addUser(@RequestBody User user) {
+        try {
+            User savedUser = userService.addUser(user);
+            return ResponseEntity.ok(savedUser);
+        } catch (org.springframework.dao.DataIntegrityViolationException e) {
+            // Duplicate username
+            Map<String, String> error = new HashMap<>();
+            error.put("error", "Username already exists");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(error); // 409
+        } catch (Exception e) {
+            Map<String, String> error = new HashMap<>();
+            error.put("error", "Failed to add user: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+        }
     }
 
     // get By id
@@ -89,10 +97,20 @@ public class UserController {
         return userService.findByKeyword(keyword);
     }
 
-    // Change password
-    @PutMapping("/{id}/password")
-    public boolean changePassword( @PathVariable Integer id, @RequestParam String newPassword) {
-        return userService.changePassword(id, newPassword);
+
+    @PutMapping("/password")
+    public boolean changePassword(
+            @RequestBody Map<String, String> body
+    ) {
+        String currentPassword = body.get("currentPassword");
+        String newPassword = body.get("newPassword");
+
+        String username = SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getName();
+
+        return userService.changePassword(username, currentPassword, newPassword);
     }
 
 
