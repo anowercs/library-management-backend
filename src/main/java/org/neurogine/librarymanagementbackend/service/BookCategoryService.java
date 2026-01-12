@@ -22,6 +22,12 @@ public class BookCategoryService {
         return bookCategoryRepository.save(bookCategory);
     }
 
+    public BookCategory getById(Integer id) {
+        return bookCategoryRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Category not found"));
+    }
+
+
     public void delete(Integer id) {
         bookCategoryRepository.deleteById(id);
     }

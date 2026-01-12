@@ -35,6 +35,12 @@ public class BookCategoryController {
         return bookCategoryService.update(bookCategory);
     }
 
+    @GetMapping("/{id}")
+    public BookCategory getById(@PathVariable Integer id) {
+        return bookCategoryService.getById(id);
+    }
+
+
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Integer id) {
         bookCategoryService.delete(id);
