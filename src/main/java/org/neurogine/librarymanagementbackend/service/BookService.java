@@ -9,6 +9,10 @@ import org.neurogine.librarymanagementbackend.repository.BookRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 
@@ -43,10 +47,26 @@ public class BookService {
         return bookRepository.save(book);
     }
 
+    public void delete(Integer id) {
+        Book book = bookRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Book not found"));
 
-    public void delete(Integer id){
-        bookRepository.deleteById(id);
+        // 🔴 delete image file from disk
+        if (book.getPicture() != null) {
+            Path imagePath = Paths.get(
+                    "/home/anower/All/Interview/Library-Management/library_book_images",
+                    book.getPicture()
+            );
+            try {
+                Files.deleteIfExists(imagePath);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        bookRepository.delete(book);
     }
+
 
 
     public List<Book> findAll() {
