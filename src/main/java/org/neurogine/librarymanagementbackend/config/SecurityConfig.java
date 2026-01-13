@@ -29,7 +29,6 @@ public class SecurityConfig {
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
 
-                // ENABLE CORS IN SPRING SECURITY
                 .cors(Customizer.withDefaults())
 
                 .authorizeHttpRequests(auth -> auth
@@ -39,13 +38,21 @@ public class SecurityConfig {
                         // public endpoints
                         .requestMatchers(
                                 "/api/users/login",
-                               // "/api/users/register",
                                 "/images/**"
                         ).permitAll()
 
-                        // everything else needs JWT
+
+                        // ✅ BOOK APIs - ALL require authentication
+                        .requestMatchers(HttpMethod.GET, "/api/books").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/api/books/**").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/api/books").authenticated()
+                        .requestMatchers(HttpMethod.PUT, "/api/books/**").authenticated()
+                        .requestMatchers(HttpMethod.DELETE, "/api/books/**").authenticated()
+
+                        // everything else
                         .anyRequest().authenticated()
                 )
+
 
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 

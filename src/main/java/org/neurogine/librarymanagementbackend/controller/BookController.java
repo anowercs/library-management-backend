@@ -24,8 +24,6 @@ import java.util.UUID;
 public class BookController {
     private final BookService bookService;
 
-
-    // ✅ CHANGE THIS IF PATH MOVES
     private static final String IMAGE_DIR =
             "/home/anower/All/Interview/Library-Management/library_book_images";
 
@@ -64,11 +62,30 @@ public class BookController {
 
     }
 
-    @PutMapping("/{id}")
-    public Book update(@PathVariable Integer id, @RequestBody Book book) {
-        book.setId(id);
-        return bookService.update(book);
+    @GetMapping("/{id}")
+    public Book getById(@PathVariable Integer id) {
+        return bookService.getById(id);
     }
+
+
+    @PutMapping(
+            value = "/{id}",
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE
+    )
+    public Book update(
+            @PathVariable Integer id,
+            @RequestParam String bookName,
+            @RequestParam String description,
+            @RequestParam String remark,
+            @RequestParam Integer categoryId,
+            @RequestParam(required = false) MultipartFile file
+    ) throws IOException {
+
+        return bookService.updateWithImage(
+                id, bookName, description, remark, categoryId, file
+        );
+    }
+
 
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Integer id) {
