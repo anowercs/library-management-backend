@@ -120,8 +120,8 @@ public class BookService {
         return bookRepository.findAllWithCategory();
     }
 
-    public List<Book> findByKeyword(String keyword){
-        return bookRepository.findByBookNameContainingOrRemarkContainingOrDescriptionContaining(
-                keyword, keyword, keyword);
+
+    public List<Book> findByKeyword(String keyword) {
+        return bookRepository.searchWithCategory(keyword);
     }
 }

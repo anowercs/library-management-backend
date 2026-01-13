@@ -92,8 +92,15 @@ public class BookController {
         bookService.delete(id);
     }
 
+
     @GetMapping("/search")
-    public List<Book> search(@RequestParam String keyword) {
+    public List<Book> search(@RequestParam(required = false) String keyword) {
+
+        if (keyword == null || keyword.trim().isEmpty()) {
+            return bookService.findAll();
+        }
+
         return bookService.findByKeyword(keyword);
     }
+
 }

@@ -25,4 +25,14 @@ public interface BookRepository extends JpaRepository<Book, Integer> {
     @Query("SELECT b FROM Book b LEFT JOIN FETCH b.category WHERE b.id = :id")
     Optional<Book> findByIdWithCategory(@Param("id") Integer id);
 
+    @Query("""
+    select distinct b from Book b
+    left join fetch b.category
+    where lower(b.bookName) like lower(concat('%', :keyword, '%'))
+       or lower(b.remark) like lower(concat('%', :keyword, '%'))
+       or lower(b.description) like lower(concat('%', :keyword, '%'))
+    """)
+    List<Book> searchWithCategory(@Param("keyword") String keyword);
+
+
 }
