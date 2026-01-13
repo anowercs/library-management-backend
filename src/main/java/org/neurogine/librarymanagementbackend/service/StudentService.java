@@ -51,4 +51,12 @@ public class StudentService {
         return studentRepository.findByNameContaining(keyword);
     }
 
+    public List<Student> search(String keyword) {
+        return studentRepository
+                .findByNameContainingIgnoreCaseOrNoContainingIgnoreCase(
+                        keyword, keyword
+                );
+    }
+
+
 }

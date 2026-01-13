@@ -17,6 +17,7 @@ import java.util.List;
 public class StudentController {
 
     private final StudentService studentService;
+    private final StudentRepository studentRepository;
 
     @GetMapping
     public List<Student> list(){
@@ -46,8 +47,12 @@ public class StudentController {
 
 
     @GetMapping("/search")
-    public List<Student> search(@RequestParam String keyword){
-        return studentService.findByKeyword(keyword);
+    public List<Student> search(@RequestParam String keyword) {
+        if (keyword.trim().isEmpty()) {
+            return List.of(); // Return empty list if no keyword
+        }
+        return studentRepository.searchByKeyword(keyword.trim());
     }
+
 
 }

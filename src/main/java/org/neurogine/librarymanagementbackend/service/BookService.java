@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.neurogine.librarymanagementbackend.entity.Book;
 import org.neurogine.librarymanagementbackend.entity.BookCategory;
+import org.neurogine.librarymanagementbackend.repository.BookBorrowRepository;
 import org.neurogine.librarymanagementbackend.repository.BookCategoryRepository;
 import org.neurogine.librarymanagementbackend.repository.BookRepository;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,7 @@ public class BookService {
 
     private static final String IMAGE_DIR = "/home/anower/All/Interview/Library-Management/library_book_images";
     private final BookRepository bookRepository;
+    private final BookBorrowRepository bookBorrowRepository;
 
     private final BookCategoryRepository categoryRepository;
 
@@ -124,4 +126,17 @@ public class BookService {
     public List<Book> findByKeyword(String keyword) {
         return bookRepository.searchWithCategory(keyword);
     }
+
+    public List<Book> findAllWithAvailability() {
+        List<Book> books = bookRepository.findAllWithCategory();
+
+        books.forEach(book -> {
+            boolean borrowed = bookBorrowRepository.existsByBookIdAndReturnedFalse(book.getId());
+
+            book.setAvailable(!borrowed);
+        });
+
+        return books;
+    }
+
 }

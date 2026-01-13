@@ -103,4 +103,10 @@ public class BookController {
         return bookService.findByKeyword(keyword);
     }
 
+    @GetMapping("/available")
+    public List<Book> listWithAvailability() {
+        return bookService.findAllWithAvailability();
+    }
+
+
 }

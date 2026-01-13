@@ -32,7 +32,11 @@ public class Book {
     @JoinColumn(name = "category_id")
     private BookCategory category;
 
-    // ---------- NOT A DB COLUMN ----------
+
     @Transient
     private Integer categoryId;
+
+    @Transient
+    private boolean available;
+
 }
