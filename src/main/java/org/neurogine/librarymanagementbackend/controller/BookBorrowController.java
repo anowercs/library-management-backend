@@ -55,6 +55,14 @@ public class BookBorrowController {
         }
     }
 
+    // BookBorrowController.java
+
+    @GetMapping("/active")
+    public List<BookBorrow> getAllActiveBorrows() {
+        return bookBorrowService.getBorrowedBooks();
+    }
+
+
 
 
 
