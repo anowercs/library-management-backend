@@ -1,7 +1,10 @@
 package org.neurogine.librarymanagementbackend.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.List;
 
 
 @Entity
@@ -25,6 +28,10 @@ public class Student {
     private Integer age;
 
     private String gender;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "student")
+    private List<BookBorrow> borrows;
 
     @PrePersist
     @PreUpdate

@@ -139,4 +139,16 @@ public class BookService {
         return books;
     }
 
+
+    public List<Book> getAllBooks() {
+        List<Book> books = bookRepository.findAll();
+        for (Book book : books) {
+            book.setAvailable(
+                    !bookBorrowRepository.existsByBookIdAndReturnedFalse(book.getId())
+            );
+        }
+        return books;
+    }
+
+
 }

@@ -28,7 +28,7 @@ public class Book {
 
     private String remark;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "category_id")
     private BookCategory category;
 

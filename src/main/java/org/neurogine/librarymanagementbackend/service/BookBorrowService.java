@@ -45,16 +45,45 @@ public class BookBorrowService {
         return borrowRepository.save(borrow);
     }
 
+      // For old code compatibility
     public void returnBook(Integer borrowId) {
+        returnBook(borrowId, null);
+    }
 
+    // For return UI
+    public void returnBook(Integer borrowId, LocalDate returnDate) {
         BookBorrow borrow = borrowRepository.findById(borrowId)
                 .orElseThrow(() -> new RuntimeException("Borrow record not found"));
 
+        if (borrow.isReturned()) {
+            throw new RuntimeException("Book already returned");
+        }
+
         borrow.setReturned(true);
-        borrow.setReturnDate(LocalDate.now());
+        borrow.setReturnDate(
+                returnDate != null ? returnDate : LocalDate.now()
+        );
     }
+
+
 
     public List<BookBorrow> getBorrowedBooks() {
         return borrowRepository.findByReturnedFalse();
     }
+
+    public List<BookBorrow> getActiveBorrowsByStudentNo(String studentNo) {
+
+        String normalizedNo = studentNo.trim();
+
+        Student student = studentRepository
+                .findByNoIgnoreCase(normalizedNo)
+                .orElseThrow(() -> new RuntimeException(
+                        "Student not found with no: " + normalizedNo
+                ));
+
+        return borrowRepository.findByStudentIdAndReturnedFalse(student.getId());
+    }
+
+
+
 }

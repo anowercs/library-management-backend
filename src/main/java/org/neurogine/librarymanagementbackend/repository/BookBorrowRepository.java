@@ -12,6 +12,8 @@ public interface BookBorrowRepository extends JpaRepository<BookBorrow, Integer>
 
     // All currently borrowed books
     List<BookBorrow> findByReturnedFalse();
+    List<BookBorrow> findByStudentIdAndReturnedFalse(Integer studentId);
+
 
     // Borrow history of a student
     List<BookBorrow> findByStudentId(Integer studentId);
