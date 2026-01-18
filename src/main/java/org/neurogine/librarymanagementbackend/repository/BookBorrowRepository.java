@@ -17,4 +17,7 @@ public interface BookBorrowRepository extends JpaRepository<BookBorrow, Integer>
 
     // Borrow history of a student
     List<BookBorrow> findByStudentId(Integer studentId);
+
+    // DELETE all borrows by student (for cascade cleanup)
+    void deleteByStudentId(Integer studentId);
 }
