@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/users")
@@ -114,5 +115,40 @@ public class UserController {
     }
 
 
+    // Update user
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateUser(@PathVariable Integer id, @RequestBody User user) {
+        try {
+            // Verify user exists
+            User existingUser = userService.findById(id);
+            if (existingUser == null) {
+                Map<String, String> error = new HashMap<>();
+                error.put("error", "User not found");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+            }
+
+            // Check if new username already exists (and it's not the same user)
+            if (!existingUser.getUserName().equals(user.getUserName())) {
+                Optional<User> userExists = userService.findByUserName(user.getUserName());
+                if (userExists.isPresent()) {
+                    Map<String, String> error = new HashMap<>();
+                    error.put("error", "Username already exists");
+                    return ResponseEntity.status(HttpStatus.CONFLICT).body(error); // 409
+                }
+            }
+
+            // Update username and password
+            existingUser.setUserName(user.getUserName());
+            existingUser.setPassword(user.getPassword());
+
+            User updatedUser = userService.updateUser(existingUser);
+            return ResponseEntity.ok(updatedUser);
+
+        } catch (Exception e) {
+            Map<String, String> error = new HashMap<>();
+            error.put("error", "Failed to update user: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+        }
+    }
 
 }

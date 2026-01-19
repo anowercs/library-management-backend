@@ -43,6 +43,10 @@ public class UserService {
         return userRepository.findById(id).orElse(null);
     }
 
+    public Optional<User> findByUserName(String userName) {
+        return userRepository.findByUserName(userName);
+    }
+
     public List<User> findAll(){return userRepository.findAll();}
 
     public List<User> findByKeyword(String keyword){return userRepository.findByUserNameContaining(keyword);}
